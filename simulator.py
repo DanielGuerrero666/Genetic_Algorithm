@@ -53,6 +53,14 @@ def selection(chromosomes, fitness_list):
         if i == 0:
             r1 = fitness_list[i] if spin1 <= fitness_list[i] else 0
             r2 = fitness_list[i] if spin1 <= fitness_list[i] else 0
+        else:
+            r1 = fitness_list[i] if fitness_list[i-1] < spin1 <= fitness_list[i] else 0
+            r2 = fitness_list[i] if fitness_list[i-1] < spin2 <= fitness_list[i] else 0
 
-    roulette_chosen1 = chromosomes.index(fitness_list.index())
+    if r1 and r2 != 0:
+        roulette_chosen1 = chromosomes.index(fitness_list.index(r1))
+        roulette_chosen2 = chromosomes.index(fitness_list.index(r2)) 
+    
+    return(elitism_chosen, roulette_chosen1, roulette_chosen2)
 
+    
