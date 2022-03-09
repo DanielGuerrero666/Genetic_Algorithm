@@ -1,15 +1,21 @@
 import random 
-from population import generator
 
 # POPULATION GENERATION - May correct
-instruction_set = 'RLUD'
 population = []
 
+def generator():
+    instruction_set = 'RLUD'
+    chromosome = []
+
+    for i in range(15):
+        chromosome.append(instruction_set[random.randrange(4)])
+
+    return "".join(chromosome)
+
 for i in range(5):
-    population.append(generator(instruction_set))
+    population.append(generator())
 
 # SIMULATION OF FITNESS
-
 def simulation(chromosomes):
     n = 4
     matrix = [0] * n
@@ -20,24 +26,29 @@ def simulation(chromosomes):
     col = 0
     matrix[row][col] = 1
     movements = {"U":(-1,0), "D":(1,0), "R":(0,1), "L":(0,-1)} # Movements dict
-    for instruction in chromosomes:
-        # Arce's version of movements in the matrix
-        row += movements[instruction][0]
-        col += movements[instruction][1]
-         
-        # Matrix's limits
-        if row < 0:
-            row = 0
-        elif row >= n:
-            row = n - 1 
-        elif col >= n:
-            col = n - 1
-        elif col < 0:
-            col = 0
+    fitness_list = []
 
-        matrix[row][col] = 1
+    for chromosome in chromosomes:
+        for instruction in chromosome:
+            # Arce's version of movements in the matrix
+            row += movements[instruction][0]
+            col += movements[instruction][1]
+            
+            # Matrix's limits
+            if row < 0:
+                row = 0
+            elif row >= n:
+                row = n - 1 
+            elif col >= n:
+                col = n - 1
+            elif col < 0:
+                col = 0
 
-    return sum(sum(row) for row in matrix) # returns fitness for the chromosome evaluated
+            matrix[row][col] = 1
+        
+        fitness_list.append(sum(sum(row) for row in matrix)) 
+    
+    return dict(zip(chromosomes, fitness_list)) # returns fitness for the chromosome evaluated
 
 # SELECTION (ROULETTE & ELITISM)
 
@@ -63,4 +74,5 @@ def selection(chromosomes, fitness_list):
     
     return(elitism_chosen, roulette_chosen1, roulette_chosen2)
 
-    
+
+print(simulation(population))
