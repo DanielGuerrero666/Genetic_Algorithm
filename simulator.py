@@ -52,27 +52,37 @@ def simulation(chromosomes):
 
 # SELECTION (ROULETTE & ELITISM)
 
-def selection(chromosomes, fitness_list):
-    elitism_chosen = chromosomes.index(fitness_list.index(max(fitness_list)))
-    for fitness in fitness_list:
-        fitness = fitness if fitness_list.index(fitness) == 0 else fitness + fitness_list.index(fitness - 1)
-    
-    spin1 = random.randrange(fitness_list[-1])
-    spin2 = random.randrange(fitness_list[-1])
+def selection(chromosomes_fitness):
+    fitness_list = []
+    fitness_list_keys = []
 
-    for i in range(len(fitness_list)):
+    for value in chromosomes_fitness.values():
+        fitness_list.append(value)
+
+    for key in chromosomes_fitness.keys():
+        fitness_list_keys.append(key)
+
+    elitism_chosen = fitness_list_keys[fitness_list.index(max(fitness_list))]
+
+    roulette = []
+
+    for i in range(len(fitness_list)): # The fitness list gets acumulated in the roulette list
+        roulette.append(fitness_list[i] if i == 0 else fitness_list[i] + fitness_list[i-1])
+    
+    spin1 = random.randrange(roulette[-1])
+    spin2 = random.randrange(roulette[-1])
+
+    for i in range(len(chromosomes_fitness)):
         if i == 0:
-            r1 = fitness_list[i] if spin1 <= fitness_list[i] else 0
-            r2 = fitness_list[i] if spin1 <= fitness_list[i] else 0
+            rlt_chosen1 = fitness_list_keys[i] if spin1 <= fitness_list[i] else 0
+            rlt_chosen2 = fitness_list_keys[i] if spin2 <= fitness_list[i] else 0
         else:
-            r1 = fitness_list[i] if fitness_list[i-1] < spin1 <= fitness_list[i] else 0
-            r2 = fitness_list[i] if fitness_list[i-1] < spin2 <= fitness_list[i] else 0
-
-    if r1 and r2 != 0:
-        roulette_chosen1 = chromosomes.index(fitness_list.index(r1))
-        roulette_chosen2 = chromosomes.index(fitness_list.index(r2)) 
+            rlt_chosen1 = fitness_list_keys[i] if fitness_list[i-1] < spin1 <= fitness_list[i] else 0
+            rlt_chosen2 = fitness_list_keys[i] if fitness_list[i-1] < spin2 <= fitness_list[i] else 0
     
-    return(elitism_chosen, roulette_chosen1, roulette_chosen2)
+    return(elitism_chosen, rlt_chosen1, rlt_chosen2)
 
 
-print(simulation(population))
+simulation_result = simulation(population)
+
+print(selection(simulation_result))
