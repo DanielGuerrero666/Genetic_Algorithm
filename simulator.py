@@ -90,8 +90,3 @@ def selection(chromosomes_fitness):
 
 
     return(elitism_chosen, rlt_chosen1, rlt_chosen2)
-
-
-simulation_result = simulation(population)
-
-print(selection(simulation_result))
