@@ -72,17 +72,21 @@ def selection(chromosomes_fitness):
     spin1 = random.randrange(roulette[-1])
     spin2 = random.randrange(roulette[-1])
 
+    rlt_chosen1 = 0
+    rlt_chosen2 = 0
+
     for i in range(len(chromosomes_fitness)):
         if i == 0:
-            rlt_chosen1 = fitness_list_keys[i] if spin1 <= fitness_list[i] else 0
-            rlt_chosen2 = fitness_list_keys[i] if spin2 <= fitness_list[i] else 0
+            if spin1 <= fitness_list[i]:
+                rlt_chosen1 = fitness_list_keys[i]
+            if spin2 <= fitness_list[i]:
+                rlt_chosen2 = fitness_list_keys[i]
+
         else:
-            rlt_chosen1 = fitness_list_keys[i] if fitness_list[i-1] < spin1 <= fitness_list[i] else 0
-            rlt_chosen2 = fitness_list_keys[i] if fitness_list[i-1] < spin2 <= fitness_list[i] else 0
-    
+            if fitness_list[i-1] < spin1 <= fitness_list[i]:
+                rlt_chosen1 = fitness_list_keys[i]
+            if fitness_list[i-1] < spin2 <= fitness_list[i]:
+                rlt_chosen2 = fitness_list_keys[i]
+
+
     return(elitism_chosen, rlt_chosen1, rlt_chosen2)
-
-
-simulation_result = simulation(population)
-
-print(selection(simulation_result))
